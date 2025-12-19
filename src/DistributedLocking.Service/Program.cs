@@ -24,3 +24,5 @@ app.MapControllers();
 logger.Log("DistributedLocking Service starting...");
 
 app.Run();
+
+public partial class Program { }
