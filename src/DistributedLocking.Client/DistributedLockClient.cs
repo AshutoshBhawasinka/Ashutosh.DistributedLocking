@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Text;
+using Ashutosh.Common.Logger;
 using DistributedLocking.Client.Models;
 using Newtonsoft.Json;
 
@@ -8,6 +9,7 @@ namespace DistributedLocking.Client
 {
     internal sealed class DistributedLockClient : IDistributedLock
     {
+        private static readonly Logger Logger = new Logger(typeof(DistributedLockClient));
         private readonly string _serviceBaseUrl;
         private readonly HttpClient _httpClient;
 
@@ -21,6 +23,7 @@ namespace DistributedLocking.Client
             _serviceBaseUrl = serviceBaseUrl.TrimEnd('/');
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(30);
+            Logger.Log($"DistributedLockClient initialized with service URL: {_serviceBaseUrl}");
         }
 
         public DistributedLockClient(string serviceBaseUrl, HttpClient httpClient)
@@ -32,6 +35,7 @@ namespace DistributedLocking.Client
 
             _serviceBaseUrl = serviceBaseUrl.TrimEnd('/');
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            Logger.Log($"DistributedLockClient initialized with service URL: {_serviceBaseUrl} and custom HttpClient");
         }
 
         public IDisposable AcquireLock(string resourceName)
@@ -50,6 +54,8 @@ namespace DistributedLocking.Client
             {
                 clientId = Guid.NewGuid().ToString("N");
             }
+
+            Logger.LogVerbose($"Attempting to acquire lock for resource '{resourceName}' with clientId '{clientId}'");
 
             try
             {
@@ -71,14 +77,17 @@ namespace DistributedLocking.Client
 
                     if (lockResponse != null && lockResponse.Success && !string.IsNullOrEmpty(lockResponse.LockToken))
                     {
+                        Logger.Log($"Lock acquired successfully for resource '{resourceName}' for client '{clientId}' with token '{lockResponse.LockToken}'");
                         return new LockHandle(_serviceBaseUrl, resourceName, lockResponse.LockToken, _httpClient);
                     }
                 }
 
+                Logger.LogWarning($"Failed to acquire lock for resource '{resourceName}' for client '{clientId}'. Status: {response.StatusCode}");
                 return null;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError(ex, $"Exception while acquiring lock for resource '{resourceName}' for client '{clientId}'");
                 return null;
             }
         }
@@ -90,6 +99,8 @@ namespace DistributedLocking.Client
                 throw new ArgumentNullException(nameof(resourceName));
             }
 
+            Logger.LogVerbose($"Checking lock status for resource '{resourceName}'");
+
             try
             {
                 var response = _httpClient.GetAsync($"{_serviceBaseUrl}/api/lock/status/{Uri.EscapeDataString(resourceName)}").GetAwaiter().GetResult();
@@ -99,13 +110,17 @@ namespace DistributedLocking.Client
                     string responseBody = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                     var statusResponse = JsonConvert.DeserializeObject<LockStatusResponse>(responseBody);
 
-                    return statusResponse != null && statusResponse.IsLocked;
+                    bool isLocked = statusResponse != null && statusResponse.IsLocked;
+                    Logger.LogVerbose($"Resource '{resourceName}' lock status: {(isLocked ? "locked" : "unlocked")}");
+                    return isLocked;
                 }
 
+                Logger.LogWarning($"Failed to get lock status for resource '{resourceName}'. Status: {response.StatusCode}");
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError(ex, $"Exception while checking lock status for resource '{resourceName}'");
                 return false;
             }
         }

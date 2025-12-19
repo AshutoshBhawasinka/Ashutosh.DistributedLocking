@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Ashutosh.Common.Logger" Version="3.0.0" />
+  </ItemGroup>
+
 </Project>

@@ -2,12 +2,14 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using Ashutosh.Common.Logger;
 using Newtonsoft.Json;
 
 namespace DistributedLocking.Client
 {
     public sealed class LockHandle : IDisposable
     {
+        private static readonly Logger Logger = new Logger(typeof(LockHandle));
         private readonly string _serviceBaseUrl;
         private readonly string _resourceName;
         private readonly string _lockToken;
@@ -25,6 +27,7 @@ namespace DistributedLocking.Client
             _disposed = false;
 
             _heartbeatTimer = new Timer(SendHeartbeat, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+            Logger.Log($"LockHandle created for resource '{resourceName}' with token '{lockToken}'");
         }
 
         public string ResourceName
@@ -56,14 +59,26 @@ namespace DistributedLocking.Client
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = _httpClient.PostAsync($"{_serviceBaseUrl}/api/lock/heartbeat", content).GetAwaiter().GetResult();
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    Logger.LogVerbose($"Heartbeat sent successfully for resource '{_resourceName}'");
+                }
+                else
+                {
+                    Logger.LogWarning($"Heartbeat failed for resource '{_resourceName}'. Status: {response.StatusCode}");
+                }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError(ex, $"Exception while sending heartbeat for resource '{_resourceName}': {ex.Message}");
             }
         }
 
         private void ReleaseLock()
         {
+            Logger.LogVerbose($"Releasing lock for resource '{_resourceName}'");
+            
             try
             {
                 var request = new
@@ -76,9 +91,19 @@ namespace DistributedLocking.Client
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = _httpClient.PostAsync($"{_serviceBaseUrl}/api/lock/release", content).GetAwaiter().GetResult();
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    Logger.Log($"Lock released successfully for resource '{_resourceName}'");
+                }
+                else
+                {
+                    Logger.LogWarning($"Failed to release lock for resource '{_resourceName}'. Status: {response.StatusCode}");
+                }
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError(ex, $"Exception while releasing lock for resource '{_resourceName}': {ex.Message}");
             }
         }
 
@@ -96,6 +121,8 @@ namespace DistributedLocking.Client
                 {
                     return;
                 }
+
+                Logger.LogVerbose($"Disposing LockHandle for resource '{_resourceName}'");
 
                 if (disposing)
                 {
