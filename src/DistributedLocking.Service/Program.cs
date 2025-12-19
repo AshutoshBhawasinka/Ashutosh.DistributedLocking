@@ -1,9 +1,13 @@
 using Ashutosh.Common.Logger;
+using Ashutosh.DistributedLocking.Service.Logging;
 using Ashutosh.DistributedLocking.Service.Services;
 
 var logger = new Logger(typeof(Program));
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddProvider(new CustomLoggerProvider());
 
 builder.Host.UseWindowsService(options =>
 {
