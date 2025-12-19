@@ -1,4 +1,4 @@
-namespace DistributedLocking.Client.Models
+namespace Ashutosh.DistributedLocking.Client.Models
 {
     internal class LockStatusResponse
     {

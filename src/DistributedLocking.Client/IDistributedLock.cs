@@ -1,6 +1,6 @@
 using System;
 
-namespace DistributedLocking.Client
+namespace Ashutosh.DistributedLocking.Client
 {
     public interface IDistributedLock
     {

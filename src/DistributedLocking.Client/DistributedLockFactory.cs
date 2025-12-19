@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 
-namespace DistributedLocking.Client
+namespace Ashutosh.DistributedLocking.Client
 {
     public static class DistributedLockFactory
     {

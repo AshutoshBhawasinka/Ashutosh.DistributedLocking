@@ -5,7 +5,7 @@ using System.Threading;
 using Ashutosh.Common.Logger;
 using Newtonsoft.Json;
 
-namespace DistributedLocking.Client
+namespace Ashutosh.DistributedLocking.Client
 {
     public sealed class LockHandle : IDisposable
     {

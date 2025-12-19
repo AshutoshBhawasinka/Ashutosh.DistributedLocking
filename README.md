@@ -31,11 +31,51 @@ Client library for interacting with the locking service.
 ## Usage
 
 ### Running the Service
+
+#### As a Console Application
 ```bash
 cd src/DistributedLocking.Service
 dotnet run
 ```
 Service runs on `http://localhost:5000` by default.
+
+#### As a Windows NT Service
+
+**1. Publish the application:**
+```powershell
+cd src/DistributedLocking.Service
+dotnet publish -c Release -o C:\Services\DistributedLockingService
+```
+
+**2. Install the Windows Service (Run as Administrator):**
+```powershell
+sc.exe create "DistributedLockingService" binPath="C:\Services\DistributedLockingService\DistributedLocking.Service.exe" start=auto
+```
+
+**3. Start the service:**
+```powershell
+sc.exe start DistributedLockingService
+```
+
+**4. Configure the service URL (optional):**
+Edit `appsettings.json` in the publish folder to configure URLs:
+```json
+{
+  "Urls": "http://localhost:5000"
+}
+```
+
+**Managing the Windows Service:**
+```powershell
+# Check status
+sc.exe query DistributedLockingService
+
+# Stop service
+sc.exe stop DistributedLockingService
+
+# Delete/uninstall service
+sc.exe delete DistributedLockingService
+```
 
 ### Using the Client Library
 ```csharp

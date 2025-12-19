@@ -2,10 +2,10 @@ using System;
 using System.Net.Http;
 using System.Text;
 using Ashutosh.Common.Logger;
-using DistributedLocking.Client.Models;
+using Ashutosh.DistributedLocking.Client.Models;
 using Newtonsoft.Json;
 
-namespace DistributedLocking.Client
+namespace Ashutosh.DistributedLocking.Client
 {
     internal sealed class DistributedLockClient : IDistributedLock
     {

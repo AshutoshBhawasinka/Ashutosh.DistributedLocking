@@ -1,8 +1,8 @@
 using Ashutosh.Common.Logger;
-using DistributedLocking.Service.Models;
 using System.Collections.Concurrent;
+using Ashutosh.DistributedLocking.Service.Models;
 
-namespace DistributedLocking.Service.Services
+namespace Ashutosh.DistributedLocking.Service.Services
 {
     public class LockManager : IDisposable
     {

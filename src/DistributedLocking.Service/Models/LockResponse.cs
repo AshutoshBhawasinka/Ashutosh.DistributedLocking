@@ -1,4 +1,4 @@
-namespace DistributedLocking.Service.Models
+namespace Ashutosh.DistributedLocking.Service.Models
 {
     public class LockResponse
     {

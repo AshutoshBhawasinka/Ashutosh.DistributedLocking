@@ -1,9 +1,9 @@
 using Ashutosh.Common.Logger;
-using DistributedLocking.Service.Models;
-using DistributedLocking.Service.Services;
+using Ashutosh.DistributedLocking.Service.Models;
+using Ashutosh.DistributedLocking.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DistributedLocking.Service.Controllers
+namespace Ashutosh.DistributedLocking.Service.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
