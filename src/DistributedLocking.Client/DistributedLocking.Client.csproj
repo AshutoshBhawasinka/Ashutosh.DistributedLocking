@@ -4,6 +4,20 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Ashutosh.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <BaseOutputPath>..\..\Bin\DistributedLocking.Client</BaseOutputPath>
+    <OutputPath>..\..\Bin\DistributedLocking.Client\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <Title>Ashutosh's Distributed Locking Client</Title>
+    <PackageProjectUrl>https://github.com/AshutoshBhawasinka/Ashutosh.DistributedLocking</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/AshutoshBhawasinka/Ashutosh.DistributedLocking</RepositoryUrl>
+    <PackageOutputPath>$(OutputPath)..\</PackageOutputPath>
+    <PackageId>Ashutosh.$(AssemblyName)</PackageId>
+    <Authors>Ashutosh Bhawasinka</Authors>
+    <Product>Ashutosh.$(AssemblyName)</Product>
+    <Description>C# Client for the Distributed Locking service</Description>
+    <Copyright>Copyright © Ashutosh Bhawasinka 2025</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
