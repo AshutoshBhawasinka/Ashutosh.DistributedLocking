@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ashutosh.Common.Logger" Version="3.1.0" />
+    <PackageReference Include="Ashutosh.Common.Logger" Version="4.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
   </ItemGroup>
 

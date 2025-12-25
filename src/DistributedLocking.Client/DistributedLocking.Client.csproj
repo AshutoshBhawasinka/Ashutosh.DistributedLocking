@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ashutosh.Common.Logger" Version="3.1.0" />
+    <PackageReference Include="Ashutosh.Common.Logger" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
